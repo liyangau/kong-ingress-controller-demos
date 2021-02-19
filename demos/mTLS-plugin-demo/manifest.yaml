@@ -1,0 +1,94 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: proxy-to-httpbin
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+    konghq.com/plugins: mtls-auth
+    konghq.com/strip-path: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /mtls
+        backend:
+          serviceName: httpbin-service
+          servicePort: 80
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: mtls-user
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+username: demo
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: mtls-auth
+config:
+  ca_certificates:
+  - 4e4beb2d-2030-4a1d-bf24-df9fdefafb36  
+  - a6344b9a-fbf1-4722-b637-38c4f46ee8d2
+plugin: mtls-auth
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-ca-root-cert
+  annotations:
+    kubernetes.io/ingress.class: kong
+  labels:
+    konghq.com/ca-cert: 'true'
+type: Opaque
+stringData:
+  cert: |
+    -----BEGIN CERTIFICATE-----
+    MIICsTCCAhOgAwIBAgIBATAKBggqhkjOPQQDAjB7MRUwEwYDVQQDDAxmb01NIFJv
+    b3QgQ0ExDTALBgNVBAsMBGRlbW8xETAPBgNVBAgMCFZpY3RvcmlhMQswCQYDVQQG
+    EwJBVTESMBAGA1UEBwwJTWVsYm91cm5lMR8wHQYJKoZIhvcNAQkBFhBhZG1pbkBh
+    dWZvbW0uY29tMB4XDTIxMDIwOTE0Mjc0M1oXDTMxMDIwNzE0Mjc0M1owezEVMBMG
+    A1UEAwwMZm9NTSBSb290IENBMQ0wCwYDVQQLDARkZW1vMREwDwYDVQQIDAhWaWN0
+    b3JpYTELMAkGA1UEBhMCQVUxEjAQBgNVBAcMCU1lbGJvdXJuZTEfMB0GCSqGSIb3
+    DQEJARYQYWRtaW5AYXVmb21tLmNvbTCBmzAQBgcqhkjOPQIBBgUrgQQAIwOBhgAE
+    AJauFAcihBCGhIL3h1gc4FA8LzTrlAKdLPE6oAJzgDs2NXLB7E2IboV3IXgWsYmI
+    +1d9B70OdWWR1OstPymrpvFlAK97saE64j9fxp/WrrgXEMYeFLzftpqH1Gup6t6F
+    kQH4hVbm4kl93D/vmrPT24JqlZeFNCwD8A/CGm12pVs4yG3Po0UwQzAPBgNVHRMB
+    Af8EBTADAQH/MA4GA1UdDwEB/wQEAwICtDAgBgNVHSUBAf8EFjAUBggrBgEFBQcD
+    AgYIKwYBBQUHAwEwCgYIKoZIzj0EAwIDgYsAMIGHAkE5sXc9kpuTHNsEVrCPEV66
+    IbEWnA+OdyZmWP0qeG0jIJ43ORNYeLurR+efzlHo+LxG58vB+EVUfn/SoRf5sqTt
+    qAJCAIaFbD7Ta87JQDmHOcf02phTJvqf12Uv4IoVEubYudFIISrmrGhpZ7McnwtZ
+    SrDEUr9YZxXL9bv9XDr1bOPyg9Lw
+    -----END CERTIFICATE-----
+  id: a6344b9a-fbf1-4722-b637-38c4f46ee8d2
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-ca-intermediat-cert
+  annotations:
+    kubernetes.io/ingress.class: kong
+  labels:
+    konghq.com/ca-cert: 'true'
+type: Opaque
+stringData:
+  cert: |
+    -----BEGIN CERTIFICATE-----
+    MIICfzCCAeGgAwIBAgIBZDAKBggqhkjOPQQDAjB7MRUwEwYDVQQDDAxmb01NIFJv
+    b3QgQ0ExDTALBgNVBAsMBGRlbW8xETAPBgNVBAgMCFZpY3RvcmlhMQswCQYDVQQG
+    EwJBVTESMBAGA1UEBwwJTWVsYm91cm5lMR8wHQYJKoZIhvcNAQkBFhBhZG1pbkBh
+    dWZvbW0uY29tMB4XDTIxMDIwOTE0MzExNFoXDTMwMDIyMjE0MzExNFoweTETMBEG
+    A1UEAwwKZm9NTSBJRCBDQTENMAsGA1UECwwEZGVtbzERMA8GA1UECAwIVmljdG9y
+    aWExCzAJBgNVBAYTAkFVMRIwEAYDVQQHDAlNZWxib3VybmUxHzAdBgkqhkiG9w0B
+    CQEWEGFkbWluQGF1Zm9tbS5jb20wdjAQBgcqhkjOPQIBBgUrgQQAIgNiAATLrPqB
+    17Sew013PetWlNPfOlzctZau6RvWzGasthWrX71OzIpFl7kvSXG7Z4aY7+NToWL/
+    NSuqgueUBkyQCOykmnhIACnqHY4QawVq/2PG1FmDrKhf5hKxgI0b21t0tPejOzA5
+    MA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgK0MBYGA1UdJQEB/wQMMAoG
+    CCsGAQUFBwMCMAoGCCqGSM49BAMCA4GLADCBhwJBfc3Iilzy90lNlIcSZ+ZT+mVq
+    LyUDXROtU8qyqlnrXwrIHOhzJCeUzy99tds9HzgyZL3vbymnQZMphpsbao2y2JoC
+    QgEZOWOO1GdKuIaUxNYHqHRCGDBjqFh3BHClj/EiocFjoIfJ35ycuYfnopQ8dXfF
+    FH1VatS11zXg6bd7x/yjtGYLNw==
+    -----END CERTIFICATE-----
+  id: 4e4beb2d-2030-4a1d-bf24-df9fdefafb36

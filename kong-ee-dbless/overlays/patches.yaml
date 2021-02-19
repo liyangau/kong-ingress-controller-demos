@@ -1,0 +1,28 @@
+- op: add
+  path: /spec/template/spec/containers/0/ports/3
+  value: {"containerPort": 8001, "name": "admin", "protocol": "TCP"}
+- op: add
+  path: /spec/template/spec/containers/0/ports/3
+  value: {"containerPort": 8444, "name": "admin-ssl", "protocol": "TCP"}
+- op: add
+  path: /spec/template/spec/containers/0/ports/3
+  value: {"containerPort": 8002, "name": "manager", "protocol": "TCP"}
+- op: add
+  path: /spec/template/spec/containers/0/ports/3
+  value: {"containerPort": 8445, "name": "manager-ssl", "protocol": "TCP"}
+- op: replace
+  path: /spec/template/spec/containers/0/env/3/value
+  value: "0.0.0.0:8001, 127.0.0.1:8444 ssl"
+- op: add
+  path: /spec/template/spec/containers/0/env/4
+  value: {"name":"KONG_GUI_LISTEN","value":"0.0.0.0:8002, 0.0.0.0:8445 ssl"}
+# - op: add
+#   path: /spec/template/spec/containers/0/env/0
+#   value: [{"name":"KONG_LICENSE_DATA","valueFrom":{"secretKeyRef":{"key":"license","name":"kong-enterprise-license"}}}]
+- op: replace
+  path: /spec/template/spec/containers/0/image
+  value: "kong-docker-kong-gateway-docker.bintray.io/kong-enterprise-edition:2.3.2.0-alpine"
+- op: remove
+  path: /spec/template/spec/imagePullSecrets
+- op: remove
+  path: /spec/template/spec/containers/0/env/0

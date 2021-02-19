@@ -1,0 +1,47 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: proxy-to-httpbin
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+    konghq.com/plugins: hmac-auth-plugin
+    konghq.com/strip-path: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /hmac
+        backend:
+          serviceName: httpbin-service
+          servicePort: 80
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: hmac-auth-plugin
+config:
+  enforce_headers:
+  - date
+  - request-line
+plugin: hmac-auth
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: hmac-auth-user
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+username: hmac-auth-username
+credentials:
+  - hmac-auth-secret
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: hmac-auth-secret
+type: Opaque
+stringData:
+  kongCredType: hmac-auth
+  username: hmac_tester
+  secret: XW3iMz6UuqqaTsvQWUeEUTlstvHlA25Z

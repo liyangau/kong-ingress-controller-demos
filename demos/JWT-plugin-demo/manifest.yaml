@@ -1,0 +1,45 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: proxy-to-httpbin
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+    konghq.com/plugins: jwt-auth
+    konghq.com/strip-path: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /jwt
+        backend:
+          serviceName: httpbin-service
+          servicePort: 80
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: jwt-auth
+plugin: jwt
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: jwt-user
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+username: jwt-user
+credentials:
+  - jwt-key-rs256
+  - jwt-key-hs256
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: jwt-key-hs256
+type: Opaque
+stringData:
+  kongCredType: jwt
+  algorithm: HS256
+  key: jwt-tester-key
+  secret: jwt-tester-secret

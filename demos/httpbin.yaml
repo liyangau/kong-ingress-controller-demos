@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpbin-pod
+  template:
+    metadata:
+      labels:
+        app: httpbin-pod
+    spec:
+      containers:
+      - name: httpbin
+        image: kennethreitz/httpbin
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpbin-service
+  annotations:
+    konghq.com/path: "/anything"
+spec:
+  selector:
+    app: httpbin-pod
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP

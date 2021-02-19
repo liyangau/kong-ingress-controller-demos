@@ -1,0 +1,45 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: proxy-to-httpbin
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+    konghq.com/plugins: basic-auth-plugin
+    konghq.com/strip-path: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /basic
+        backend:
+          serviceName: httpbin-service
+          servicePort: 80
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: basic-auth-plugin
+config: 
+  hide_credentials: true
+plugin: basic-auth
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: basic-auth-user
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+username: basic-auth-username
+credentials:
+  - basic-auth-secret
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: basic-auth-secret
+type: Opaque
+stringData:
+  kongCredType: basic-auth
+  username: testuser
+  password: testpass
