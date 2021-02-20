@@ -1,9 +1,0 @@
-- op: replace
-  path: /spec/template/spec/containers/0/image
-  value: "kong-docker-kong-gateway-docker.bintray.io/kong-enterprise-edition:2.3.2.0-alpine"
-- op: remove
-  path: /spec/template/spec/imagePullSecrets
-- op: remove
-  path: /spec/template/spec/containers/0/env/1
-  
-

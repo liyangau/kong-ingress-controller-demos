@@ -1,1 +1,6 @@
-./kong-ee
+.DS_Store 
+.DS_Store? 
+._* .Trashes 
+ehthumbs.db 
+Thumbs.db
+/kong-ee
