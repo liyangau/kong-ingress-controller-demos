@@ -5,5 +5,5 @@
   path: /spec/template/spec/containers/0/ports/3
   value: {"containerPort": 8444, "name": "admin-ssl", "protocol": "TCP"}
 - op: replace
-  path: /spec/template/spec/containers/0/env/2/value
-  value: "127.0.0.1:8001, 127.0.0.1:8444 ssl"
+  path: /spec/template/spec/containers/0/env/5/value
+  value: "0.0.0.0:8001, 127.0.0.1:8444 ssl"

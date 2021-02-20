@@ -8,7 +8,7 @@
 #
 
 KONG_INGRESS_VERSION=1.1.0
-KONG_INGRESS_DOWNLOAD_LINK=https://raw.githubusercontent.com/Kong/kubernetes-ingress-controller/$(KONG_INGRESS_VERSION)/deploy/single/all-in-one-dbless.yaml
+KONG_INGRESS_DOWNLOAD_LINK=https://raw.githubusercontent.com/Kong/kubernetes-ingress-controller/$(KONG_INGRESS_VERSION)/deploy/single/all-in-one-postgres.yaml
 KONG_INGRESS_INSTALL_MANIFEST=kong/kong-install-manifest-$(KONG_INGRESS_VERSION).yaml
 
 KONG_INGRESS_EE_DBLESS_DOWNLOAD_LINK=https://raw.githubusercontent.com/Kong/kubernetes-ingress-controller/$(KONG_INGRESS_VERSION)/deploy/single/all-in-one-dbless-k4k8s-enterprise.yaml 
@@ -37,10 +37,12 @@ k3d-down:
 .PHONY: kong-install
 kong-install: kong/kong-install-manifest-$(KONG_INGRESS_VERSION).yaml
 	kustomize build kong/overlays/ | kubectl apply -f -
+	kubectl apply -f demos/httpbin.yaml
 
 .PHONY: kong-uninstall
 kong-uninstall: kong/kong-install-manifest-$(KONG_INGRESS_VERSION).yaml
 	kustomize build kong/overlays/ | kubectl delete -f -
+	kubectl delete -f demos/httpbin.yaml
 
 .PHONY: kong-install-manifest
 kong/kong-install-manifest-$(KONG_INGRESS_VERSION).yaml:
@@ -52,7 +54,7 @@ kong/kong-install-manifest-$(KONG_INGRESS_VERSION).yaml:
 .PHONY: kong-ee-dbless-install
 kong-ee-dbless-install: kong/kong-ee-dbless-install-manifest-$(KONG_INGRESS_VERSION).yaml
 	kustomize build kong-ee-dbless/overlays/ | kubectl apply -f -
-	kubectl apply -f demos/httpbin.yaml
+	kubectl apply -f demos/echo.yaml
 
 .PHONY: kong-ee-dbless-uninstall
 kong-ee-dbless-uninstall: kong/kong-ee-dbless-install-manifest-$(KONG_INGRESS_VERSION).yaml
