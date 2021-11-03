@@ -27,7 +27,7 @@ plugin: key-auth
 apiVersion: configuration.konghq.com/v1
 kind: KongConsumer
 metadata:
-  name: basic-auth-user
+  name: key-auth-tester
   annotations:
     kubernetes.io/ingress.class: "kong"
 username: key-auth-tester

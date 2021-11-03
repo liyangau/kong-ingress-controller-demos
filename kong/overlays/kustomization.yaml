@@ -6,9 +6,13 @@ bases:
 resources:
 - service.yaml
 patches:
-- path: patches.yaml
+- path: deployment-patches.yaml
   target:
-    group: apps
     version: v1
     kind: Deployment
     name: ingress-kong
+- path: service-patches.yaml
+  target:
+    version: v1
+    kind: Service
+    name: kong-proxy

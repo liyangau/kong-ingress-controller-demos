@@ -1,0 +1,56 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: proxy-to-httpbin
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+    konghq.com/plugins: oauth2-auth-plugin
+    konghq.com/strip-path: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /test
+        backend:
+          serviceName: httpbin-service
+          servicePort: 80
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: oauth2-auth-plugin
+config:
+  scopes:
+  - email
+  - profile
+  - address
+  enable_authorization_code: true
+  enable_client_credentials: true
+  enable_implicit_grant: true
+  enable_password_grant: true
+  provision_key: oauth2-demo-provision-key
+plugin: oauth2
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: kong
+  name: oauth2-tester
+credentials:
+  - oauth2-credential
+username: oauth2-tester
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: oauth2-credential
+type: Opaque
+stringData:
+  kongCredType: oauth2
+  client_id: oauth2-demo-client-id
+  client_secret: oauth2-demo-client-secret
+  name: Oauth2 Demo App
+  redirect_uris: http://localhost:8000/oauth2
+  hash_secret: "true"

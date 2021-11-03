@@ -12,7 +12,6 @@ spec:
   - name: admin
     port: 80
     protocol: TCP
-    nodePort: 32001
     targetPort: 8001
   - name: admin-ssl
     port: 443

@@ -1,0 +1,93 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: proxy-to-httpbin
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+    konghq.com/plugins: key-auth-plugin,acl-plugin
+    konghq.com/strip-path: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /acl
+        backend:
+          serviceName: httpbin-service
+          servicePort: 80
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: key-auth-plugin
+config: 
+  hide_credentials: false
+plugin: key-auth
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: acl-plugin
+config: 
+  allow:
+  - group-1
+  hide_groups_header: false
+plugin: acl
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: acl-tester-1
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+username: acl-tester-1
+credentials:
+  - key-auth-secret-1
+  - acl-group-1
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: acl-tester-2
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+username: acl-tester-2
+credentials:
+  - key-auth-secret-2
+  - acl-group-2
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: key-auth-secret-1
+type: Opaque
+stringData:
+  kongCredType: key-auth
+  key: api-secret-key-1
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: key-auth-secret-2
+type: Opaque
+stringData:
+  kongCredType: key-auth
+  key: api-secret-key-2
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: acl-group-1
+type: Opaque
+stringData:
+  kongCredType: acl
+  group: group-1
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: acl-group-2
+type: Opaque
+stringData:
+  kongCredType: acl
+  group: group-2
