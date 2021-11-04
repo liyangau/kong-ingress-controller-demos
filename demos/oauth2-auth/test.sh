@@ -109,7 +109,7 @@ implicit_flow(){
 
   printf "We will get our response as below: \n"
   echo $ACCESS_TOKEN | jq
-  ACCESS_TOKEN=$(echo $ACCESS_TOKEN | jq -r ".redirect_uri" | grep -oP 'access_token=\K.*?(?=&)')
+  ACCESS_TOKEN=$(echo $ACCESS_TOKEN | jq -r ".redirect_uri" | awk -v FS="(access_token=|&)" '{print $2}')
   echo -e "I am going to store $ACCESS_TOKEN in environment variable \033[1mACCESS_TOKEN\033[0m \n"
 
   printf "Now we can authenticate with ACCESS_TOKEN: \n\n"
