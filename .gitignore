@@ -3,4 +3,4 @@
 ._* .Trashes 
 ehthumbs.db 
 Thumbs.db
-./kong/base/kong-install-manifest.yaml
+kong/base/kong-install-manifest.yaml
