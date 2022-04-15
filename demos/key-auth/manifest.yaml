@@ -1,20 +1,23 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: proxy-to-httpbin
   annotations:
-    kubernetes.io/ingress.class: "kong"
     konghq.com/plugins: key-auth-plugin
     konghq.com/strip-path: "true"
 spec:
+  ingressClassName: kong
   rules:
   - http:
       paths:
-      - path: /keyauth
-        backend:
-          serviceName: httpbin-service
-          servicePort: 80
+      - backend:
+          service:
+            name: httpbin-service
+            port:
+              number: 80
+        path: /keyauth
+        pathType: Prefix
 ---
 apiVersion: configuration.konghq.com/v1
 kind: KongPlugin

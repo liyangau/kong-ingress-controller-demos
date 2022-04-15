@@ -41,5 +41,3 @@ data:
   rsa_public_key: $(cat jwt-public.pem | base64)
 EOF
 fi
-
-

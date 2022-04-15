@@ -26,13 +26,13 @@ cluster-down:
 ####################################################################################
 .PHONY: kong-install
 kong-install: kong/kong-install-manifest-$(KONG_INGRESS_VERSION).yaml
-	kustomize build kong/overlays/ | kubectl apply -f -
+	kubectl kustomize kong/overlays/ | kubectl apply -f -
 	kubectl apply -f demos/httpbin.yaml
 	kubectl -n kong rollout status deployment ingress-kong
 
 .PHONY: kong-uninstall
 kong-uninstall: kong/kong-install-manifest-$(KONG_INGRESS_VERSION).yaml
-	kustomize build kong/overlays/ | kubectl delete -f -
+	kubectl kustomize kong/overlays/ | kubectl delete -f -
 	kubectl delete -f demos/httpbin.yaml
 
 .PHONY: kong-install-manifest

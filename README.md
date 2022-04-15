@@ -13,8 +13,7 @@ In each directory in `demos/` you will find a `manifest.yaml`, in the correspond
 This repo assumes you have the following tools installed:
 
 - [Make](https://man7.org/linux/man-pages/man1/make.1.html)
-- [K3D](https://k3d.io/) version 3.0.0 tested
-- [Kustomize](https://kustomize.io/)
+- [Kind](https://kind.sigs.k8s.io/)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 - [jq](https://stedolan.github.io/jq/)
 - [curl](https://curl.haxx.se/)
@@ -24,13 +23,13 @@ This repo assumes you have the following tools installed:
 
 ### Start up and install
 
-Starting a K3D cluster:
+Starting a KIND cluster:
 
 ```bash
-make k3d-up
+make cluster-up
 ```
 
-Installing Kong:
+Installing Kong and httpbin (in default namespace):
 
 ```bash
 make kong-install
@@ -39,22 +38,22 @@ make kong-install
 You should now have a fully functioning Kong Ingress Install, to validate:
 
 ```bash
-$ kubectl -n kong get pods
+❯ kubectl get pod -n kong
 
 NAME                            READY   STATUS      RESTARTS   AGE
-postgres-0                      1/1     Running     0          26m
-kong-migrations-65bzs           0/1     Completed   0          26m
-ingress-kong-59647d65b9-zh8xd   2/2     Running     0          26m
+ingress-kong-7ddc965575-46jdp   2/2     Running     0          9m28s
+kong-migrations-p5qsq           0/1     Completed   0          9m28s
+postgres-0                      1/1     Running     0          9m28s
 ```
 
-## Steps:
+## Authentication Demos:
 
-- [Deploy Echo Service](/demos/01_deploy-echo)
-- [Deploy Ingress Routing](/demos/02_create-ingress)
-- [Create Consumer and Credentials](/demos/03_create-consumer-with-credentials)
-- [Enable Key Authentication On Your Service](/demos/04_enable-key-auth)
-- [Enable JWT Authentication On Your Service](/demos/05_enable-jwt)
-- [Enable Rate Limiting Authentication On Your Service](/demos/06_create-rate-limit)
+- [ACL](/demos/acl)
+- [Basic Auth](/demos/basic-auth)
+- [HMAC Auth](/demos/hmac-auth)
+- [JWT](/demos/jwt)
+- [Key Auth](/demos/key-auth)
+- [Oauth2](/demos/oauth2-auth)
 
 
 ## Clean Up
@@ -62,12 +61,10 @@ ingress-kong-59647d65b9-zh8xd   2/2     Running     0          26m
 to remove everything just run
 
 ```bash
-make k3d-down
+make cluster-down
 ```
-This will destroy the cluster and the install with it.
+This will destroy the cluster.
 
 ## Resources
 
-- [Kong Ingress](https://github.com/Kong/kubernetes-ingress-controller/tree/main/docs)
-- [KongHQ Docs](https://docs.konghq.com/?itm_source=website&itm_medium=nav)
-- [Kubernetes CRD's](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
+- [Kong Ingress Controller](https://docs.konghq.com/kubernetes-ingress-controller/)
