@@ -16,9 +16,9 @@ username=hmac_tester
 
 echo -e '\n\033[1;4mNo\033[0m Token:'
 printf "We are going to make below call WITHOUT token: \n\n"
-printf "curl -sv http://localhost:8000/hmac \n\n" 
+printf "curl -s http://localhost:8000/hmac \n\n" 
 
-curl -sv http://localhost:8000/hmac | jq
+curl -s http://localhost:8000/hmac | jq
 
 TS=$(date -u "+%a, %d %b %Y %T GMT")
 signstring="date: $TS\nGET /hmac HTTP/1.1"
@@ -27,11 +27,11 @@ HMAC=$(printf "$signstring" | openssl dgst -sha256 -hmac $secret -binary | opens
 authorization="hmac username=\"$username\", algorithm=\"hmac-sha256\", headers=\"$header\", signature=\"$HMAC\""
 
 printf "\nNext we are going to calculate and use our signature. \n\n"
-printf "curl -sv \"http://localhost:8000/hmac\" \n -H \"Authorization:$authorization\" \n -H \"Date:$TS\" \n\n"
+printf "curl -s \"http://localhost:8000/hmac\" \n -H \"Authorization:$authorization\" \n -H \"Date:$TS\" \n\n"
 pause
 
 # Curl the service
-curl -sv "http://localhost:8000/hmac" -H "Authorization:$authorization" -H "Date:$TS" | jq
+curl -s "http://localhost:8000/hmac" -H "Authorization:$authorization" -H "Date:$TS" | jq
 
 # Stop the port forward using its pid
 kill -9 $(lsof -t -i tcp:8000)

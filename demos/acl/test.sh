@@ -14,23 +14,23 @@ sleep 3
 
 echo -e '\n\033[1;4mNo\033[0m API Key:'
 printf "We are going to make below call WITHOUT API key: \n\n"
-printf "curl -sv http://localhost:8000/acl | jq \n\n" 
+printf "curl -s http://localhost:8000/acl | jq \n\n" 
 pause
-curl -sv http://localhost:8000/acl | jq
+curl -s http://localhost:8000/acl | jq
 
 printf "\nNext we are going to try with an API key for consumer in group-2. \n\n"
-printf "curl -i http://localhost:8000/acl \ \n\
+printf "curl -si http://localhost:8000/acl \ \n\
   -H 'apikey: api-secret-key-2' | jq \n\n"
 pause
-curl -sv http://localhost:8000/acl \
+curl -s http://localhost:8000/acl \
   -H 'apikey: api-secret-key-2' | jq
 
-printf "\nAs we can see authenticaiton passed but this user is not allowed to consume the service. \n Let's try again with api key belongs to a user from grup-1. \n\n"
-printf "curl -i http://localhost:8000/acl \ \n\
+printf "\nAs we can see authenticaiton passed but this user is not allowed to consume the service. \n\nLet's try again with api key belongs to a user from grup-1. \n\n"
+printf "curl -s http://localhost:8000/acl \ \n\
   -H 'apikey: api-secret-key-1' | jq \n\n"
 pause
 # Curl the service once with a consumers credentials to fill the rate limit
-curl -sv http://localhost:8000/acl \
+curl -s http://localhost:8000/acl \
   -H 'apikey: api-secret-key-1' | jq
 
 # Stop the port forward using its pid

@@ -54,31 +54,31 @@ sleep 1
 
 echo -e '\n\033[1;4mNo\033[0m Token:'
 printf "We are going to make below call WITHOUT JWT Token: \n\n"
-printf "curl -sv http://localhost:8000/jwt | jq \n\n" 
+printf "curl -s http://localhost:8000/jwt | jq \n\n" 
 pause
-curl -sv http://localhost:8000/jwt | jq
+curl -s http://localhost:8000/jwt | jq
 
 printf "\nNext we are going to try JWT token signed with RS256 algorithm. \n\n"
 echo -e '\033[1;4mRS256\033[0m signature algorithm:'
 authHeader=$( rs256 "jwt-rs256-test-key" )
-printf "curl -sv http://localhost:8000/jwt \ \n\
+printf "curl -s http://localhost:8000/jwt \ \n\
   -H \"$(echo $authHeader)\" | jq \n\n"
 pause
 
 # Curl the service once with a consumers credentials to fill the rate limit
-curl -sv http://localhost:8000/jwt \
+curl -s http://localhost:8000/jwt \
   -H "$(echo $authHeader)" | jq
 
 printf "\nLastly we are going to try JWT token signed with HS256 algorithm. \n\n"
 echo -e '\033[1;4mHS256\033[0m signature algorithm:'
 authHeader=$(hs256 "jwt-tester-secret" "jwt-tester-key" )
-printf "curl -sv http://localhost:8000/jwt \ \n\
+printf "curl -s http://localhost:8000/jwt \ \n\
 -H \"$(echo $authHeader)\" | jq \n\n"
 
 pause
 
 # Curl the service once with a consumers credentials to fill the rate limit
-curl -sv http://localhost:8000/jwt \
+curl -s http://localhost:8000/jwt \
   -H "$(echo $authHeader)" | jq
 # Stop the port forward using its pid
 kill -9 $(lsof -t -i tcp:8000)

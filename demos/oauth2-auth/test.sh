@@ -14,7 +14,7 @@ kubectl port-forward -n kong service/kong-proxy 8443:443 &
 sleep 3
 
 echo -e '\nRequest without \033[1;4maccess_token\033[0m:'
-printf "curl -skv https://localhost:8443/test | jq \n\n" 
+printf "curl -sk https://localhost:8443/test | jq \n\n"
 pause
 curl -skv https://localhost:8443/test | jq
 
@@ -34,7 +34,7 @@ auth_code_flow(){
     --data \"client_id=oauth2-demo-client-id\" \ \n\
     --data \"provision_key=oauth2-demo-provision-key\" \ \n\
     --data \"authenticated_userid=authenticated_tester\" \ \n\
-    --insecure | jq \n\n" 
+    --insecure | jq \n\n"
   pause
 
   AUTH_CODE=$(curl -X POST --silent \
@@ -58,7 +58,7 @@ auth_code_flow(){
     --data \"client_id=oauth2-demo-client-id\" \ \n\
     --data \"client_secret=oauth2-demo-client-secret\" \ \n\
     --data \"code=$AUTH_CODE\" \ \n\
-    --insecure | jq \n\n" 
+    --insecure | jq \n\n"
   pause
 
   ACCESS_TOKEN=$(curl -X POST --silent \
@@ -76,10 +76,10 @@ auth_code_flow(){
 
   printf "Now we can authenticate with ACCESS_TOKEN: \n\n"
   printf "curl -skv https://localhost:8443/test/anything \ \n\
-    -H \"Authorization:Bearer $ACCESS_TOKEN\" | jq \n\n" 
+    -H \"Authorization:Bearer $ACCESS_TOKEN\" | jq \n\n"
   pause
 
-  curl -skv https://localhost:8443/test/anything -H "Authorization:Bearer $ACCESS_TOKEN" | jq
+  curl -sk https://localhost:8443/test/anything -H "Authorization:Bearer $ACCESS_TOKEN" | jq
 }
 
 implicit_flow(){
@@ -95,7 +95,7 @@ implicit_flow(){
     --data \"client_id=oauth2-demo-client-id\" \ \n\
     --data \"provision_key=oauth2-demo-provision-key\" \ \n\
     --data \"authenticated_userid=authenticated_tester\" \ \n\
-    --insecure | jq \n\n" 
+    --insecure | jq \n\n"
   pause
 
   ACCESS_TOKEN=$(curl -X POST --silent \
@@ -114,10 +114,10 @@ implicit_flow(){
 
   printf "Now we can authenticate with ACCESS_TOKEN: \n\n"
   printf "curl -skv https://localhost:8443/test/anything \ \n\
-    -H \"Authorization:Bearer $ACCESS_TOKEN\" | jq \n\n" 
+    -H \"Authorization:Bearer $ACCESS_TOKEN\" | jq \n\n"
   pause
 
-  curl -skv https://localhost:8443/test/anything -H "Authorization:Bearer $ACCESS_TOKEN" | jq
+  curl -sk https://localhost:8443/test/anything -H "Authorization:Bearer $ACCESS_TOKEN" | jq
 }
 
 password_flow(){
@@ -135,7 +135,7 @@ password_flow(){
     --data \"client_secret=oauth2-demo-client-secret\" \ \n\
     --data \"provision_key=oauth2-demo-provision-key\" \ \n\
     --data \"authenticated_userid=authenticated_tester\" \ \n\
-    --insecure | jq \n\n" 
+    --insecure | jq \n\n"
   pause
 
   ACCESS_TOKEN=$(curl -X POST --silent \
@@ -158,7 +158,7 @@ password_flow(){
     -H \"Authorization:Bearer $ACCESS_TOKEN\" | jq \n\n" 
   pause
 
-  curl -skv https://localhost:8443/test/anything -H "Authorization:Bearer $ACCESS_TOKEN" | jq
+  curl -sk https://localhost:8443/test/anything -H "Authorization:Bearer $ACCESS_TOKEN" | jq
 }
 
 client_cred_flow(){
@@ -175,7 +175,7 @@ client_cred_flow(){
     --data \"client_id=oauth2-demo-client-id\" \ \n\
     --data \"client_secret=oauth2-demo-client-secret\" \ \n\
     --data \"provision_key=oauth2-demo-provision-key\" \ \n\
-    --insecure | jq \n\n" 
+    --insecure | jq \n\n"
   pause
 
   ACCESS_TOKEN=$(curl -X POST --silent \
@@ -194,10 +194,10 @@ client_cred_flow(){
 
   printf "Now we can authenticate with ACCESS_TOKEN: \n\n"
   printf "curl -skv https://localhost:8443/test/anything \ \n\
-    -H \"Authorization:Bearer $ACCESS_TOKEN\" | jq \n\n" 
+    -H \"Authorization:Bearer $ACCESS_TOKEN\" | jq \n\n"
   pause
 
-  curl -skv https://localhost:8443/test/anything -H "Authorization:Bearer $ACCESS_TOKEN" | jq
+  curl -sk https://localhost:8443/test/anything -H "Authorization:Bearer $ACCESS_TOKEN" | jq
 }
 
 while getopts "t:" opt
