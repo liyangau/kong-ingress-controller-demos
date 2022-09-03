@@ -19,4 +19,4 @@ spec:
     targetPort: 8444
   selector:
     app: ingress-kong
-  type: NodePort
+  type: ClusterIP

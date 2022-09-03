@@ -23,7 +23,7 @@ apiVersion: configuration.konghq.com/v1
 kind: KongPlugin
 metadata:
   name: key-auth-plugin
-config: 
+config:
   hide_credentials: false
 plugin: key-auth
 ---
@@ -31,7 +31,7 @@ apiVersion: configuration.konghq.com/v1
 kind: KongPlugin
 metadata:
   name: acl-plugin
-config: 
+config:
   allow:
   - group-1
   hide_groups_header: false

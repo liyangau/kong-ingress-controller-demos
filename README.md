@@ -1,10 +1,19 @@
 # Kong Ingress Demo
 
-This is a collection of scripts designed to show case how the Kong Ingress works and how to configure it.
+This is a collection of scripts/manifests designed to show case how Kong Ingress controller works with plugins.
 
 ## How it works:
 
-In each directory in `demos/` you will find a `manifest.yaml`, in the corresponding `README.md` you will find a description of what the configuration for that directory does. You will notice some steps depend on you having run previous steps. The dependencies will be listed in the `README.md`
+Currently I have created demos for below plugins.
+
+- [ACL](/demos/acl)
+- [Basic Auth](/demos/basic-auth)
+- [HMAC Auth](/demos/hmac-auth)
+- [JWT](/demos/jwt)
+- [Key Auth](/demos/key-auth)
+- [Oauth2](/demos/oauth2-auth)
+
+You can go to each folder (for example `demos/acl`). Run `make install` to apply the manifest, `make test` to test the flow and `make uninstall` to clean up.
 
 ## Getting Started
 
@@ -35,7 +44,9 @@ Installing Kong and httpbin (in default namespace):
 make kong-install
 ```
 
-You should now have a fully functioning Kong Ingress Install, to validate:
+You should now have a fully functioning Kong Ingress Installed now.
+
+To validate:
 
 ```bash
 ❯ kubectl get pod -n kong
@@ -46,25 +57,14 @@ kong-migrations-p5qsq           0/1     Completed   0          9m28s
 postgres-0                      1/1     Running     0          9m28s
 ```
 
-## Authentication Demos:
+## Delete cluster
 
-- [ACL](/demos/acl)
-- [Basic Auth](/demos/basic-auth)
-- [HMAC Auth](/demos/hmac-auth)
-- [JWT](/demos/jwt)
-- [Key Auth](/demos/key-auth)
-- [Oauth2](/demos/oauth2-auth)
-
-
-## Clean Up
-
-to remove everything just run
+To delete the cluster, we can run below command.
 
 ```bash
 make cluster-down
 ```
-This will destroy the cluster.
 
 ## Resources
 
-- [Kong Ingress Controller](https://docs.konghq.com/kubernetes-ingress-controller/)
+- [Kong Ingress Controller](https://docs.konghq.com/kubernetes-ingress-controller/latest/)
